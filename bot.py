@@ -11,6 +11,7 @@ from portfolio import (
     reset_portfolio,
     get_transactions
 from analysis import full_analysis
+from features.news import format_news
 )
 
 # =====================================
@@ -479,7 +480,42 @@ async def resetportfolio(ctx):
 async def analyze(ctx, symbol: str):
 
     # כל הקוד הארוך של analyze כאן
+# =====================================
+# חדשות למניה
+# =====================================
 
+@bot.command()
+async def news(ctx, symbol: str):
+
+    symbol = symbol.upper()
+
+    await ctx.send(
+        f"⏳ מחפש חדשות על **{symbol}**..."
+    )
+
+    try:
+
+        news_text = format_news(
+            symbol,
+            limit=5
+        )
+
+        # דיסקורד מאפשר עד 2000 תווים
+        if len(news_text) > 1900:
+
+            news_text = news_text[:1900]
+
+        await ctx.send(
+            news_text
+        )
+
+    except Exception as error:
+
+        print(error)
+
+        await ctx.send(
+            "❌ אירעה שגיאה בקבלת החדשות."
+        )
 
 # =====================================
 # הפעלת הבוט
